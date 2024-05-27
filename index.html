@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Sensor Realtime</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+     <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="/img/usta.png">
+
+  <link href="styles.css" rel="stylesheet">
+</head>
+<body class="bg-cover bg-up h-auto transition-all duration-300 rounded-lg cursor-pointer filter  hover:grayscale-0" style="background-image: url('img/fondo.png');">
+
+  <!--TOP BAR-->
+  <div class="topnav bg-green-600 text-white p-4">
+    <h1 class="text-2xl ">Bienvenido al software de AgroSystemSolution (ASS) 📱 </h1>
+  </div>
+
+  <div class="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+      <p class="text-l text-yellow-400 font-bold"><i class="fas fa-thermometer-half text-red-500"></i> TEMPERATURA</p>
+      <p class="text-2xl mt-2"><span id="temp"></span> &deg;C</p>
+      <button onclick="openModal('temp')" class="bg-white hover:bg-gray-100 text-yellow-400 font-semibold py-2 px-4 rounded shadow">Ver Gráfica</button>
+    </div>
+    <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+      <p class="text-l text-blue-500 font-bold"><i class="fas fa-tint text-blue-500"></i> HUMEDAD</p>
+      <p class="text-2xl mt-2"><span id="hum"></span> &percnt;</p>
+      <button onclick="openModal('hum')" class="bg-white hover:bg-gray-100 text-blue-500 font-semibold py-2 px-4 rounded shadow">Ver Gráfica</button>
+    </div>
+    <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+      <p class="text-l text-green-300 font-bold"><i class="fas fa-user-astronaut" id="presion"></i> PRESIÓN</p>
+      <p class="text-2xl mt-2"><span id="pres"></span> hPa</p>
+      <button onclick="openModal('pres')" class="bg-white hover:bg-gray-100 text-green-300 font-semibold py-2 px-4 rounded shadow">Ver Gráfica</button>
+    </div>
+    <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+        <p class="text-l font-bold"><i class="fas fa-wind text-orange-500"></i> DIRECCIÓN DEL VIENTO</p>
+        <p class="text-2xl mt-2"><span id="windDir"></span>&deg;</p>
+        <button onclick="openModal('windDir')" class="bg-white hover:bg-gray-100 text-black-500 font-semibold py-2 px-4 rounded shadow">Ver Gráfica</button>
+      </div>
+      <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+        <p class="text-l text-purple-600 font-bold"><i class="fas fa-meteor text-purple-500"></i> VELOCIDAD DEL VIENTO</p>
+        <p class="text-2xl mt-2"><span id="windSpeed"></span>Km/h</p>
+        <button onclick="openModal('windSpeed')" class="bg-white hover:bg-gray-100 font-semibold py-2 px-4 rounded shadow text-purple-600">Ver Gráfica</button>
+      </div>
+      <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+        <p class="text-l text-blue-800 font-bold"><i class="fas fa-cloud-rain text-blue-500 "></i> NIVEL DE LLUVIA</p>
+        <p class="text-2xl mt-2"><span id="rainin"></span>mm</p>
+        <button onclick="openModal('rainin')" class="bg-white hover:bg-gray-100  font-semibold py-2 px-4 rounded shadow text-blue-800">Ver Gráfica</button>
+      </div>
+      <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+        <p class="text-l text-red-400 font-bold"><i class="fas fa-lightbulb" id="batt"></i> NIVEL DE BATERÍA</p>
+        <p class="text-l mt-2 font-bold"><span id="battlevel"></span>V</p>
+        <button onclick="openModal('battlevel')" class="bg-white hover:bg-gray-100  font-semibold py-2 px-4 rounded shadow text-red-400">Ver Gráfica</button>
+      </div>
+      <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+        <p class="text-l font-bold text-yellow-500"><i class="fas fa-car-battery text-yellow-500"></i> NIVEL DE LÚZ</p>
+        <p class="text-2xl mt-2"><span id="lightlevel"></span>lum</p>
+        <button onclick="openModal('lightlevel')" class="bg-white hover:bg-gray-100 text-yellow-500 font-semibold py-2 px-4 rounded shadow">Ver Gráfica</button>
+      </div>
+    <div class="card bg-white p-6 rounded-lg shadow opacity-90 hover:opacity-100">
+      <p class="text-l font-bold"><i class="fas fa-calendar" id="fecha2"></i> FECHA</p>
+      <p class="text-2xl mt-2"><span id="fecha"></span></p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+<div id="modal" class="fixed inset-0 flex items-center justify-center bg-opacity-80 hidden bg-gray-500">
+  <div class="bg-white rounded-lg p-8 shadow-lg w-3/4 h-3/4"> <!-- Ajusta el tamaño con w-3/4 y h-3/4 -->
+    <h2 id="modalTitle" class="text-xl mb-4">Gráfica</h2>
+    <canvas id="modalChart"></canvas>
+    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onclick="closeModal()">
+        Cerrar
+      </button>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
+
+
+
+
